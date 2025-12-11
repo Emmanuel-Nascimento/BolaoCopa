@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-warning">
+                <h4>✏️ Editar Jogo</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label>Time A</label>
+                            <input type="text" name="time_a" class="form-control" value="{{ jogo.time_a }}" required>
+                        </div>
+                        <div class="col">
+                            <label>Time B</label>
+                            <input type="text" name="time_b" class="form-control" value="{{ jogo.time_b }}" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label>Data e Hora</label>
+                        <input type="datetime-local" name="data_hora" class="form-control" 
+                               value="{{ jogo.data_hora.strftime('%Y-%m-%dT%H:%M') }}" required>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success">Salvar Alterações</button>
+                        
+                        <a href="{{ url_for('deletar_jogo', jogo_id=jogo.id) }}" 
+                           class="btn btn-danger"
+                           onclick="return confirm('Tem certeza? Isso vai apagar o jogo e os palpites feitos nele!')">
+                           🗑️ Excluir Jogo Cancelado
+                        </a>
+
+                        <a href="{{ url_for('admin') }}" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

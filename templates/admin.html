@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>👑 Área do Administrador</h2>
+    
+    <div class="row">
+        <div class="col-md-4">
+            
+            <div class="card shadow p-3 mb-4">
+                <h5>Novo Jogo</h5>
+                <form method="POST" action="{{ url_for('admin') }}">
+                    <input type="hidden" name="acao" value="criar_jogo">
+                    <div class="mb-2">
+                        <input type="text" name="time_a" class="form-control" placeholder="Time A" required>
+                    </div>
+                    <div class="mb-2">
+                        <input type="text" name="time_b" class="form-control" placeholder="Time B" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Data e Hora</label>
+                        <input type="datetime-local" name="data_hora" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">Cadastrar</button>
+                </form>
+            </div>
+
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white">
+                    👥 Gerenciar Usuários
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        {% for usuario in lista_usuarios %}
+                            <li class="list-group-item">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        {% if usuario.id == 1 %} 👑 Dono
+                                        {% elif usuario.is_admin %} ⭐ Admin
+                                        {% else %} 👤 User
+                                        {% endif %}
+                                        
+                                        <br><strong>{{ usuario.nome }}</strong>
+                                        
+                                        <br><small class="text-muted">
+                                            {% if usuario.id == 1 and current_user.id != 1 %}
+                                                🔒 [Email Oculto]
+                                            {% else %}
+                                                {{ usuario.email }}
+                                            {% endif %}
+                                        </small>
+                                    </div>
+                                    
+                                    <div>
+                                        {% if usuario.id != 1 or current_user.id == 1 %}
+                                            <a href="{{ url_for('editar_usuario', user_id=usuario.id) }}" class="btn btn-sm btn-outline-warning">✏️</a>
+                                        {% endif %}
+                                        
+                                        {% if current_user.id == 1 and usuario.id != 1 %}
+                                            <a href="{{ url_for('deletar_usuario', user_id=usuario.id) }}" 
+                                               class="btn btn-sm btn-outline-danger"
+                                               onclick="return confirm('Expulsar usuário?')">🗑️</a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                {% if current_user.id == 1 and usuario.id != 1 %}
+                                    <div class="mt-2 text-end">
+                                        <a href="{{ url_for('toggle_admin', user_id=usuario.id) }}" class="btn btn-sm btn-light border">
+                                            {% if usuario.is_admin %} ⬇️ Rebaixar {% else %} ⬆️ Promover {% endif %}
+                                        </a>
+                                    </div>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            {% if current_user.id == 1 %}
+            <div class="card border-danger mb-4">
+                <div class="card-header bg-danger text-white">
+                    ⚠️ Zona de Perigo
+                </div>
+                <div class="card-body text-center">
+                    <a href="{{ url_for('resetar_campeonato') }}" 
+                       class="btn btn-outline-danger w-100"
+                       onclick="return confirm('TEM CERTEZA? Vai zerar tudo!')">
+                       💣 Resetar Camp.
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="col-md-8">
+            <h4>Gerenciar Jogos</h4>
+            <div class="list-group">
+                {% for jogo in jogos %}
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5 class="mb-0">
+                                {{ jogo.time_a }} x {{ jogo.time_b }}
+                                <a href="{{ url_for('editar_jogo', jogo_id=jogo.id) }}" class="text-warning ms-2" style="text-decoration: none;">✏️</a>
+                            </h5>
+                            <span class="badge bg-light text-dark border">{{ jogo.data_hora.strftime('%d/%m %H:%M') }}</span>
+                        </div>
+                        {% if jogo.resultado_real %}
+                            <div class="alert alert-success p-2 mb-0">Resultado: <strong>{{ jogo.resultado_real }}</strong></div>
+                        {% else %}
+                            <div class="btn-group w-100" role="group">
+                                <a href="{{ url_for('definir_resultado', jogo_id=jogo.id, quem_ganhou='time_a') }}" class="btn btn-sm btn-outline-success">Vitória {{ jogo.time_a }}</a>
+                                <a href="{{ url_for('definir_resultado', jogo_id=jogo.id, quem_ganhou='empate') }}" class="btn btn-sm btn-outline-secondary">Empate</a>
+                                <a href="{{ url_for('definir_resultado', jogo_id=jogo.id, quem_ganhou='time_b') }}" class="btn btn-sm btn-outline-primary">Vitória {{ jogo.time_b }}</a>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <div class="alert alert-warning">Nenhum jogo cadastrado.</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

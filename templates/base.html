@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bolão da Copa</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">⚽ Bolão da Copa</a>
+            
+            <div class="navbar-nav me-auto">
+                <a class="nav-link active" href="{{ url_for('ranking') }}">🏆 Ranking</a>
+            </div>
+
+            <div class="navbar-nav ms-auto">
+                {% if current_user.is_authenticated %}
+                    <span class="nav-item nav-link text-light me-3">Olá, {{ current_user.nome }} ({{ current_user.pontos }} pts)</span>
+                    
+                    {% if current_user.is_admin %}
+                        <a class="nav-link text-warning fw-bold" href="{{ url_for('admin') }}">
+                            {% if current_user.id == 1 %}
+                                👑 Dono
+                            {% else %}
+                                ⭐ Admin
+                            {% endif %}
+                        </a>
+                    {% endif %}
+                    
+                    <a class="nav-link" href="{{ url_for('logout') }}">Sair</a>
+                {% else %}
+                    <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                    <a class="nav-link" href="{{ url_for('cadastro') }}">Criar Conta</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-3">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-info shadow-sm">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        {% block content %}{% endblock %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
