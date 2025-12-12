@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        <div class="card shadow">
+            <div class="card-header text-center bg-transparent border-0 pt-4">
+                <h3 class="fw-bold text-warning" style="font-family: 'Oswald', sans-serif; letter-spacing: 1px;">
+                    📧 REENVIAR EMAIL
+                </h3>
+            </div>
+            
+            <div class="card-body p-4">
+                <p class="text-muted small text-center mb-4">
+                    Não recebeu o email? Digite seu endereço abaixo para enviarmos um novo link de ativação.
+                </p>
+                
+                <form method="POST">
+                    <div class="mb-3">
+                        <label class="fw-bold">Seu Email Cadastrado</label>
+                        <input type="email" name="email" class="form-control" required placeholder="exemplo@email.com">
+                    </div>
+                    
+                    <button type="submit" class="btn btn-warning w-100 fw-bold py-2">ENVIAR NOVO LINK</button>
+                </form>
+                
+                <div class="text-center mt-3">
+                    <a href="{{ url_for('login') }}" class="text-decoration-none text-muted small">Voltar para Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

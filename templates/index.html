@@ -15,8 +15,16 @@
             </div>
             
             <div class="card-body">
-                <h5 class="card-title">
-                    {{ jogo.time_a }} <span class="text-danger">X</span> {{ jogo.time_b }}
+                <h5 class="card-title d-flex justify-content-center align-items-center gap-2">
+                    {% if bandeiras.get(jogo.time_a) %}
+                        <img src="https://flagcdn.com/w40/{{ bandeiras[jogo.time_a] }}.png" alt="{{ jogo.time_a }}" class="flag-img" loading="lazy">
+                    {% endif %}
+                    
+                    {{ jogo.time_a }} <span class="text-danger mx-2">X</span> {{ jogo.time_b }}
+
+                    {% if bandeiras.get(jogo.time_b) %}
+                        <img src="https://flagcdn.com/w40/{{ bandeiras[jogo.time_b] }}.png" alt="{{ jogo.time_b }}" class="flag-img" loading="lazy">
+                    {% endif %}
                 </h5>
 
                 {% if jogo.resultado_real %}
@@ -40,6 +48,18 @@
                         {% else %}
                            <small class="text-muted">Você não palpitou neste jogo.</small>
                         {% endif %}
+                    </div>
+
+                {% elif agora > jogo.data_hora %}
+                    <div class="mt-3">
+                        <span class="badge bg-danger mb-2">APOSTAS ENCERRADAS</span>
+                        <p class="text-muted small">Aguardando resultado oficial...</p>
+                        
+                        <div class="btn-group w-100" role="group">
+                             <button class="btn disabled {{ 'btn-success' if meus_palpites.get(jogo.id) == 'time_a' else 'btn-outline-secondary' }}">{{ jogo.time_a }}</button>
+                             <button class="btn disabled {{ 'btn-secondary' if meus_palpites.get(jogo.id) == 'empate' else 'btn-outline-secondary' }}">Empate</button>
+                             <button class="btn disabled {{ 'btn-primary' if meus_palpites.get(jogo.id) == 'time_b' else 'btn-outline-secondary' }}">{{ jogo.time_b }}</button>
+                        </div>
                     </div>
 
                 {% else %}

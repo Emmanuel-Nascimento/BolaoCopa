@@ -12,11 +12,19 @@
                     <div class="row mb-3">
                         <div class="col">
                             <label>Time A</label>
-                            <input type="text" name="time_a" class="form-control" value="{{ jogo.time_a }}" required>
+                            <select name="time_a" class="form-control" required>
+                                {% for time in times %}
+                                    <option value="{{ time }}" {% if time == jogo.time_a %}selected{% endif %}>{{ time }}</option>
+                                {% endfor %}
+                            </select>
                         </div>
                         <div class="col">
                             <label>Time B</label>
-                            <input type="text" name="time_b" class="form-control" value="{{ jogo.time_b }}" required>
+                            <select name="time_b" class="form-control" required>
+                                {% for time in times %}
+                                    <option value="{{ time }}" {% if time == jogo.time_b %}selected{% endif %}>{{ time }}</option>
+                                {% endfor %}
+                            </select>
                         </div>
                     </div>
                     

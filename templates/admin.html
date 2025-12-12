@@ -11,12 +11,27 @@
                 <h5>Novo Jogo</h5>
                 <form method="POST" action="{{ url_for('admin') }}">
                     <input type="hidden" name="acao" value="criar_jogo">
-                    <div class="mb-2">
-                        <input type="text" name="time_a" class="form-control" placeholder="Time A" required>
+                    
+                    <div class="mb-3">
+                        <label>Time A (Mandante)</label>
+                        <select name="time_a" class="form-control" required>
+                            <option value="" disabled selected>Selecione um time...</option>
+                            {% for time in times %}
+                                <option value="{{ time }}">{{ time }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
-                    <div class="mb-2">
-                        <input type="text" name="time_b" class="form-control" placeholder="Time B" required>
+
+                    <div class="mb-3">
+                        <label>Time B (Visitante)</label>
+                        <select name="time_b" class="form-control" required>
+                            <option value="" disabled selected>Selecione um time...</option>
+                            {% for time in times %}
+                                <option value="{{ time }}">{{ time }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
+
                     <div class="mb-3">
                         <label>Data e Hora</label>
                         <input type="datetime-local" name="data_hora" class="form-control" required>
